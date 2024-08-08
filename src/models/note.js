@@ -35,7 +35,7 @@ class Note {
     static update(updatedNote, id) {
         return db.execute(`UPDATE ${this.tableName}
         SET title = ?, description = ?, is_liked = ?, difficulty = ?, created_at = ?
-        WHERE ID = ?`, [updatedNote.title, updatedNote.description, updatedNote.isLiked, id])
+        WHERE ID = ?`, [updatedNote.title, updatedNote.description, updatedNote.isLiked, updatedNote.difficulty, updatedNote.createdAt, id])
 
     }
 
