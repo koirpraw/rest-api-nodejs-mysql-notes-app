@@ -1,53 +1,41 @@
 const db = require('../config/dbConfig');
 
-class Note {
+const tableName = 'notes';
 
-    static tableName = 'notes';
-
-    // constructor(note) {
-    //     this.title = note.title;
-    //     this.description = note.description;
-    //     this.isLiked = note.isLiked;
-    // }
-
-    constructor(note) {
-        this.title = note.title;
-        this.description = note.description;
-        this.isLiked = note.isLiked;
-        this.difficulty = note.difficulty;
-        this.createdAt = note.createdAt;
-
-    }
+const insertQuery = `INSERT INTO ${tableName} (title, description, is_liked,difficulty,created_at) VALUES (?, ?, ?,?,?)`;
+const findAllQuery = `SELECT * FROM  ${tableName}`;
+const findOneQuery = `SELECT * FROM ${tableName} WHERE id = ?`;
+const updateQuery = `UPDATE ${tableName} SET title = ?, description = ?, is_liked = ?, difficulty = ?, created_at = ? WHERE ID = ?`;
+const deleteQuery = `DELETE FROM ${tableName} WHERE id = ?`;
+const deleteAllQuery = `DELETE FROM ${tableName}`
 
 
-    static create(newNote) {
-        return db.execute(`INSERT INTO ${this.tableName} (title, description, is_liked,difficulty,created_at) VALUES (?, ?, ?,?,?)`,
-            [newNote.title, newNote.description, newNote.isLiked, newNote.difficulty, newNote.createdAt]);
-    }
-
-    static findAll() {
-        return db.execute(`SELECT * FROM  ${this.tableName}`);
-    }
-    static findById(id) {
-        return db.execute(`SELECT * FROM ${this.tableName} WHERE id = ?`, [id])
-    }
-
-    static update(updatedNote, id) {
-        return db.execute(`UPDATE ${this.tableName}
-        SET title = ?, description = ?, is_liked = ?, difficulty = ?, created_at = ?
-        WHERE ID = ?`, [updatedNote.title, updatedNote.description, updatedNote.isLiked, updatedNote.difficulty, updatedNote.createdAt, id])
-
-    }
-
-    static delete(id) {
-        return db.execute(`DELETE FROM ${this.tableName} WHERE id = ?`, [id])
-
-    }
-
-    static deleteAll() {
-        return db.execute(`DELETE FROM ${this.tableName}`)
-
-    }
+const create = (newNote) => {
+    return db.execute(insertQuery,
+        [newNote.title, newNote.description, newNote.isLiked, newNote.difficulty, newNote.createdAt]);
 }
 
-module.exports = Note;
+const findAll = () => {
+    return db.execute(findAllQuery);
+}
+const findById = (id) => {
+    return db.execute(findOneQuery, [id])
+}
+
+const update = (updatedNote, id) => {
+    return db.execute(updateQuery, [updatedNote.title, updatedNote.description, updatedNote.isLiked, updatedNote.difficulty, updatedNote.createdAt, id])
+
+}
+
+const remove = (id) => {
+    return db.execute(deleteQuery, [id])
+
+}
+
+const removeAll = () => {
+    return db.execute(deleteAllQuery)
+
+}
+
+
+module.exports = { create, findAll, findById, update, remove, removeAll };
